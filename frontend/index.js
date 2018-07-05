@@ -6,16 +6,11 @@ const detail = document.getElementById("detail");
 const newButton = document.getElementById("create")
 newButton.addEventListener('click', createNotes)
 
-function createNotes(inputData) {
-    fetch("http://localhost:3000/api/v1/notes", {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(inputData)
-  }).then(response => response.json())
-  .then(data => showNotes(new Note(data)))
-  }
+displaySideNotes = (notes) => {
+  notes.forEach( note => {
+    sidebar.innerHTML += `<div><h2 data-id="${note.id}" data-fullnote="${note.body}" data-title="${note.title}">${note.title}</h2><p>${note.body.slice(0,20)}...</p></div>`
+  })
+}
 
 (function showNotes(inputData) {
     fetch("http://localhost:3000/api/v1/notes", {
@@ -30,15 +25,19 @@ function createNotes(inputData) {
   })
 })()
 
-displaySideNotes = (notes) => {
-  notes.forEach( note => {
-    sidebar.innerHTML += `<div><h2 data-id="${note.id}" data-fullnote="${note.body}" data-title="${note.title}">${note.title}</h2><p>${note.body.slice(0,20)}...</p></div>`
-  })
-}
-
-
 
 //crud
+function createNotes(inputData) {
+  fetch("http://localhost:3000/api/v1/notes", {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(inputData)
+  }).then(response => response.json())
+  .then(data => showNotes(new Note(data)))
+}
+
 patchNote = (noteID, postTitle, postBody) => {
   const postObj = {
     method: "PATCH",
@@ -104,7 +103,7 @@ deleteClickEvent = () => {
 }
 
 sidebar.addEventListener('click', event => {
-  if (event.target.tagName === "h2") {
+  if (event.target.tagName === "H2") {
     displayClickedNote(event.target)
   }
 })
