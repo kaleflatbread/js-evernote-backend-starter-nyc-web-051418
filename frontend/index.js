@@ -3,6 +3,8 @@ const sidebar = document.getElementById("sidebar");
 const detail = document.getElementById("detail");
 // const notesURL = "http://localhost:3000/api/v1/notes";
 
+const newButton = document.getElementById("create")
+newButton.addEventListener('click', createNotes)
 
 function createNotes(inputData) {
     fetch("http://localhost:3000/api/v1/notes", {
@@ -14,6 +16,25 @@ function createNotes(inputData) {
   }).then(response => response.json())
   .then(data => showNotes(new Note(data)))
   }
+
+(function showNotes(inputData) {
+    fetch("http://localhost:3000/api/v1/notes", {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(inputData)
+  }).then(response => response.json())
+  .then(json => {
+    displaySideNotes(json)
+  })
+})()
+
+displaySideNotes = (notes) => {
+  notes.forEach( note => {
+    sidebar.innerHTML += `<div><h2 data-id="${note.id}" data-fullnote="${note.body}" data-title="${note.title}">${note.title}</h2><p>${note.body.slice(0,20)}...</p></div>`
+  })
+}
 
 
 
@@ -100,11 +121,4 @@ displayClickedNote = (note) => {
   }
   editClickEvent();
   deleteClickEvent();
-}
-
-
-displaySideNotes = (notes) => {
-  notes.forEach( note => {
-    sidebar.innerHTML += `<div><h2 data-id="${note.id}" data-fullnote="${note.body}" data-title="${note.title}">${note.title}</h2><p>${note.body.slice(0,20)}...</p></div>`
-  })
 }
