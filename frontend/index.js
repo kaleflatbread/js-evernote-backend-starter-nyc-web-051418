@@ -1,21 +1,21 @@
 //elements
 const sidebar = document.getElementById("sidebar");
 const detail = document.getElementById("detail");
-const notesURL = "http://localhost:3000/api/v1/notes";
+// const notesURL = "http://localhost:3000/api/v1/notes";
 
 
-const getNotes = fetch(notesURL)
-  .then((res) => res.json())
-  .then((json) => {
-    let noteTitles = json.map((note)=>note.title)
-    json.forEach((note)=>{
-      handleNote(note)
-    })
-  })
+function createNotes(inputData) {
+    fetch("http://localhost:3000/api/v1/notes", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(inputData)
+  }).then(response => response.json())
+  .then(data => showNotes(new Note(data)))
+  }
 
 
-const usersURL = "http://localhost:3000/api/v1/users";
-const getUsers = fetch(usersURL);
 
 //crud
 patchNote = (noteID, postTitle, postBody) => {
